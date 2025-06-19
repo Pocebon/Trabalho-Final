@@ -1,0 +1,6 @@
+@Trab_Final_HostAddress = http://localhost:5032
+
+GET {{Trab_Final_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Trab_Final.BaseDados.Models;
 using Trab_Final.Services.DTOs;
 
@@ -18,47 +20,50 @@ namespace Trab_Final
             _mapper = mapper;
         }
 
-        public List<PessoaDTO> GetAll()
+        public async Task<List<PessoaDTO>> GetAll()
         {
-            var persons = _context.Pessoas.ToList();
-            var PersonsDto = _mapper.Map<List<PessoaDTO>>(persons);
-            return PersonsDto;
-
+            var persons = await _context.Pessoas.ToListAsync();
+            var personsDto = _mapper.Map<List<PessoaDTO>>(persons);
+            return personsDto;
         }
-        public PessoaDTO GetById(int id)
+
+        public async Task<PessoaDTO?> GetById(int id)
         {
-            var pessoa = _context.Pessoas.FirstOrDefault(p => p.IdPessoa == id);
+            var pessoa = await _context.Pessoas.FirstOrDefaultAsync(p => p.IdPessoa == id);
             return pessoa == null ? null : _mapper.Map<PessoaDTO>(pessoa);
         }
 
-        public PessoaDTO Create(CriarPessoaDTO dto)
+        public async Task<PessoaDTO> Create(CriarPessoaDTO dto)
         {
             var pessoa = _mapper.Map<Pessoa>(dto);
-            _context.Pessoas.Add(pessoa);
-            _context.SaveChanges();
+
+            await _context.Pessoas.AddAsync(pessoa);        
+            await _context.SaveChangesAsync();              
 
             return _mapper.Map<PessoaDTO>(pessoa);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var pessoa = _context.Pessoas.FirstOrDefault(p => p.IdPessoa == id);
+            var pessoa = await _context.Pessoas.FirstOrDefaultAsync(p => p.IdPessoa == id);
+
             if (pessoa == null)
                 return false;
 
             _context.Pessoas.Remove(pessoa);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
             return true;
         }
-        public PessoaDTO AtualizarParcial(int id, AtualizarPessoaDTO dto)
+        public async Task<PessoaDTO?> AtualizarParcial(int id, AtualizarPessoaDTO dto)
         {
-            var pessoa = _context.Pessoas.FirstOrDefault(p => p.IdPessoa == id);
+            var pessoa = await _context.Pessoas.FirstOrDefaultAsync(p => p.IdPessoa == id);
             if (pessoa == null)
                 return null;
 
-            _mapper.Map(dto, pessoa); // aplica valores do DTO sobre a entidade existente
+            _mapper.Map(dto, pessoa); // atualiza os campos da entidade com os do DTO
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return _mapper.Map<PessoaDTO>(pessoa);
         }

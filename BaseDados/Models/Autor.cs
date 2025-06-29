@@ -12,4 +12,6 @@ public partial class Autor
     public string Nacionalidade { get; set; }
 
     public DateTime? DataNascimento { get; set; }
+
+    public virtual ICollection<Livro> Livros { get; set; } = new List<Livro>();
 }

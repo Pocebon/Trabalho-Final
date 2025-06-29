@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Trab_Final.BaseDados.Models;
 using Trab_Final.Services.DTOs;
 
@@ -17,43 +19,49 @@ namespace Trab_Final
             _mapper = mapper;
         }
 
-        public List<EmprestimoLivroDTO> GetAll()
+        public async Task<List<EmprestimoLivroDTO>> GetAll()
         {
             var emprestimosLivros = _context.EmprestimoLivros.ToList();
             return _mapper.Map<List<EmprestimoLivroDTO>>(emprestimosLivros);
         }
 
-        public EmprestimoLivroDTO GetById(int id)
+        public async Task<EmprestimoLivroDTO?> GetById(int id)
         {
-            var emprestimoLivro = _context.EmprestimoLivros.FirstOrDefault(el => el.IdEmprestimoLivro == id);
-            return emprestimoLivro == null ? null : _mapper.Map<EmprestimoLivroDTO>(emprestimoLivro);
+            var emprestimoLivro = await _context.EmprestimoLivros.FirstOrDefaultAsync(el => el.IdEmprestimoLivro == id);
+            return  _mapper.Map<EmprestimoLivroDTO>(emprestimoLivro);
         }
 
-        public EmprestimoLivroDTO Create(CriarEmprestimoLivroDTO dto)
+        public async Task<EmprestimoLivroDTO> Create(CriarEmprestimoLivroDTO dto)
         {
             var emprestimoLivro = _mapper.Map<EmprestimoLivro>(dto);
+
             _context.EmprestimoLivros.Add(emprestimoLivro);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return _mapper.Map<EmprestimoLivroDTO>(emprestimoLivro);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var emprestimoLivro = _context.EmprestimoLivros.FirstOrDefault(el => el.IdEmprestimoLivro == id);
+            var emprestimoLivro = await _context.EmprestimoLivros.FirstOrDefaultAsync(el => el.IdEmprestimoLivro == id);
+
             if (emprestimoLivro == null)
                 return false;
+
             _context.EmprestimoLivros.Remove(emprestimoLivro);
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
             return true;
         }
 
-        public EmprestimoLivroDTO AtualizarParcial(int id, AtualizarEmprestimoLivroDTO dto)
+        public async Task<EmprestimoLivroDTO?> AtualizarParcial(int id, AtualizarEmprestimoLivroDTO dto)
         {
-            var emprestimoLivro = _context.EmprestimoLivros.FirstOrDefault(el => el.IdEmprestimoLivro == id);
+            var emprestimoLivro = await _context.EmprestimoLivros.FirstOrDefaultAsync(el => el.IdEmprestimoLivro == id);
+
             if (emprestimoLivro == null)
                 return null;
+
             _mapper.Map(dto, emprestimoLivro); // aplica valores do DTO sobre a entidade existente
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
             return _mapper.Map<EmprestimoLivroDTO>(emprestimoLivro);
         }
     }

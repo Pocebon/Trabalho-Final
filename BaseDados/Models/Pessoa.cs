@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Trab_Final.Services.DTOs;
 
 namespace Trab_Final.BaseDados.Models;
 
@@ -13,5 +14,5 @@ public partial class Pessoa
 
     public string CpfPessoa { get; set; }
 
-    public virtual ICollection<Emprestimo> Emprestimos { get; set; } = new List<Emprestimo>();
+    public virtual ICollection<Emprestimo> Emprestimo { get; set; } = new List<Emprestimo>();
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -28,10 +29,9 @@ namespace Trab_Final.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<LivroDTO>> GetAll()
+        public async Task<ActionResult<List<LivroDTO>>> GetAll()
         {
-            var lista = _livroService.GetAll();
-            var livrosDTOs = _mapper.Map<List<LivroDTO>>(lista);
+            var livrosDTOs = await _livroService.GetAll();
             return Ok(livrosDTOs);
         }
 
@@ -52,6 +52,11 @@ namespace Trab_Final.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (dto.disponivel != "S" && dto.disponivel != "N")
+                return BadRequest("'Disponivel' deve ser apenas 'S' ou 'N'.");
+
+
             var livroCriado = _livroService.Create(dto);
             return CreatedAtAction(nameof(GetById), new { id = livroCriado.IdLivro }, _mapper.Map<LivroDTO>(livroCriado));
         }
@@ -75,18 +80,44 @@ namespace Trab_Final.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (dto.disponivel != null && dto.disponivel != "S" && dto.disponivel != "N")
+                return BadRequest("'Disponivel' deve ser apenas 'S' ou 'N'.");
+
             try
             {
                 var livroAtualizado = _livroService.AtualizarParcial(id, dto);
                 if (livroAtualizado == null)
-                    return NotFound($"Livro com ID {id} não encontrado.");
+                    return NotFound("Livro com esse ID não encontrado.");
 
                 return Ok(livroAtualizado);
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Dados enviados são invalidos");
+                return BadRequest("Dados são invalidos");
             }
+        }
+
+        [HttpGet("livos disponiveis")]
+        [ProducesResponseType(typeof(List<LivroDTO>), StatusCodes.Status200OK)]
+        public ActionResult<List<LivroDTO>> GetLivrosDisponiveis()
+        {
+            var livros = _livroService.GetLivrosDisponiveis();
+            var livrosDTO = _mapper.Map<List<LivroDTO>>(livros);
+            return Ok(livrosDTO);
+        }
+
+        [HttpGet("por-autor/{idAutor:int}")]
+        [ProducesResponseType(typeof(List<LivroDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<List<LivroDTO>> GetLivrosPorAutor(int idAutor)
+        {
+            var livros = _livroService.GetLivrosPorAutor(idAutor);
+
+            if (livros == null || livros.Count == 0)
+                return NotFound("Nenhum livro encontrado para esse autor.");
+
+            var livrosDTO = _mapper.Map<List<LivroDTO>>(livros);
+            return Ok(livrosDTO);
         }
     }
 }

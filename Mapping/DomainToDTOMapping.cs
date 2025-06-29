@@ -21,6 +21,7 @@ namespace Trab_Final.Mapping
             CreateMap<AtualizarEmprestimoDTO, Emprestimo>().ReverseMap();
             CreateMap<AtualizarLivroDTO, Livro>().ReverseMap();
             CreateMap<AtualizarEmprestimoLivroDTO, EmprestimoLivro>().ReverseMap();
+            CreateMap<EmprestimoStatusDTO, Emprestimo>().ReverseMap();
 
 
             CreateMap<CriarAutorDTO, Autor>().ReverseMap();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Trab_Final.Services.DTOs;
 
 namespace Trab_Final.BaseDados.Models;
 

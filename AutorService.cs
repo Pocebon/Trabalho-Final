@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Trab_Final.BaseDados.Models;
 using Trab_Final.Services.DTOs;
 
@@ -20,50 +22,48 @@ namespace Trab_Final
             _mapper = mapper;
         }
 
-        public List<AutorDTO> GetAll()
+        public async Task<List<AutorDTO>> GetAll()
         {
-            var autors = _context.Autors.ToList();
+            var autors = await _context.Autors.ToListAsync();
             var autoresDTOs = _mapper.Map<List<AutorDTO>>(autors);
             return autoresDTOs;
-
         }
 
-        public AutorDTO Create(CriarAutorDTO dto)
+        public async Task<AutorDTO> Create(CriarAutorDTO dto)
         {
             var autor = _mapper.Map<Autor>(dto);
-            _context.Autors.Add(autor);
-            _context.SaveChanges();
-            return _mapper.Map<AutorDTO>(autor);
-        }
-        public AutorDTO GetById(int id)
-        {
-            var autor = _context.Autors.FirstOrDefault(a => a.IdAutor == id);
 
-            if (autor == null)
-                return null;
+           await _context.Autors.AddAsync(autor);
+           await  _context.SaveChangesAsync();
 
             return _mapper.Map<AutorDTO>(autor);
         }
-        public bool Delete(int id)
+        public async Task<AutorDTO?> GetById(int id)
         {
-            var autor = _context.Autors.FirstOrDefault(a => a.IdAutor == id);
+            var autor = await _context.Autors.FirstOrDefaultAsync(a => a.IdAutor == id);
+
+            return _mapper.Map<AutorDTO>(autor);
+        }
+        public async Task<bool> Delete(int id)
+        {
+            var autor = await _context.Autors.FirstOrDefaultAsync(a => a.IdAutor == id);
 
             if (autor == null)
                 return false;
 
             _context.Autors.Remove(autor);
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
             return true;
         }
 
-        public AutorDTO AtualizarParcial(int id, AtualizarAutorDTO dto)
+        public async Task<AutorDTO?> AtualizarParcial(int id, AtualizarAutorDTO dto)
         {
-            var autor = _context.Autors.FirstOrDefault(a => a.IdAutor == id);
+            var autor = await _context.Autors.FirstOrDefaultAsync(a => a.IdAutor == id);
 
 
             _mapper.Map(dto, autor); 
 
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
 
             return _mapper.Map<AutorDTO>(autor);
         }

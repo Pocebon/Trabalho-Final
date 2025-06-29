@@ -839,6 +839,342 @@
         }
       }
     },
+    "/api/Emprestimo/status": {
+      "put": {
+        "tags": [
+          "Emprestimo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmprestimoStatusDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmprestimoStatusDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmprestimoStatusDTO"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/EmprestimoStatusDTO"
+              }
+            },
+            "text/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/EmprestimoStatusDTO"
+              }
+            },
+            "application/*+xml": {
+              "schema": {
+                "$ref": "#/components/schemas/EmprestimoStatusDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutorDTO"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EmprestimoLivro": {
+      "get": {
+        "tags": [
+          "EmprestimoLivro"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutorDTO"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutorDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "EmprestimoLivro"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarEmprestimoLivroDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarEmprestimoLivroDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarEmprestimoLivroDTO"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarEmprestimoLivroDTO"
+              }
+            },
+            "text/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarEmprestimoLivroDTO"
+              }
+            },
+            "application/*+xml": {
+              "schema": {
+                "$ref": "#/components/schemas/CriarEmprestimoLivroDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutorDTO"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutorDTO"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmprestimoLivroDTO"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmprestimoLivroDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EmprestimoLivro/{id}": {
+      "get": {
+        "tags": [
+          "EmprestimoLivro"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmprestimoLivroDTO"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmprestimoLivroDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "EmprestimoLivro"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutorDTO"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutorDTO"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "EmprestimoLivro"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarEmprestimoLivroDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarEmprestimoLivroDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarEmprestimoLivroDTO"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarEmprestimoLivroDTO"
+              }
+            },
+            "text/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarEmprestimoLivroDTO"
+              }
+            },
+            "application/*+xml": {
+              "schema": {
+                "$ref": "#/components/schemas/AtualizarEmprestimoLivroDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmprestimoLivroDTO"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmprestimoLivroDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Livro": {
       "get": {
         "tags": [
@@ -1101,6 +1437,92 @@
           },
           "400": {
             "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Livro/livos disponiveis": {
+      "get": {
+        "tags": [
+          "Livro"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LivroDTO"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LivroDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Livro/por-autor/{idAutor}": {
+      "get": {
+        "tags": [
+          "Livro"
+        ],
+        "parameters": [
+          {
+            "name": "idAutor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LivroDTO"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LivroDTO"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1443,6 +1865,28 @@
             "type": "string",
             "format": "date",
             "nullable": true
+          },
+          "emprestimoDevolvido": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AtualizarEmprestimoLivroDTO": {
+        "required": [
+          "idEmprestimo",
+          "idLivro"
+        ],
+        "type": "object",
+        "properties": {
+          "idLivro": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idEmprestimo": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1455,6 +1899,19 @@
             "nullable": true
           },
           "anoPublicacao": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "disponivel": {
+            "type": "string",
+            "nullable": true
+          },
+          "prateleira": {
+            "type": "string",
+            "nullable": true
+          },
+          "estante": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1554,6 +2011,24 @@
           "idLivro": {
             "type": "integer",
             "format": "int32"
+          },
+          "emprestimoDevolvido": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CriarEmprestimoLivroDTO": {
+        "type": "object",
+        "properties": {
+          "idEmprestimo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idLivro": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1575,7 +2050,20 @@
             "format": "int32",
             "nullable": true
           },
-          "idAutor": {
+          "id_autor": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "disponivel": {
+            "type": "string",
+            "nullable": true
+          },
+          "prateleira": {
+            "type": "string",
+            "nullable": true
+          },
+          "estante": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1643,6 +2131,42 @@
           "idLivro": {
             "type": "integer",
             "format": "int32"
+          },
+          "emprestimoDevolvido": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmprestimoLivroDTO": {
+        "type": "object",
+        "properties": {
+          "idEmprestimoLivro": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idLivro": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idEmprestimo": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmprestimoStatusDTO": {
+        "type": "object",
+        "properties": {
+          "idEmprestimo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "emprestimoDevolvido": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1664,6 +2188,24 @@
             "nullable": true
           },
           "idEditora": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "disponivel": {
+            "type": "string",
+            "nullable": true
+          },
+          "id_autor": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "prateleira": {
+            "type": "string",
+            "nullable": true
+          },
+          "estante": {
             "type": "integer",
             "format": "int32",
             "nullable": true

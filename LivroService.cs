@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Trab_Final.BaseDados.Models;
 using Trab_Final.Services.DTOs;
 
@@ -17,43 +19,62 @@ namespace Trab_Final
             _mapper = mapper;
         }
 
-        public List<LivroDTO> GetAll()
+        public async Task<List<LivroDTO>> GetAll()
         {
-            var livros = _context.Livros.ToList();
+            var livros = await _context.Livros.ToListAsync();
             return _mapper.Map<List<LivroDTO>>(livros);
         }
 
-        public LivroDTO GetById(int id)
+        public async Task<LivroDTO?> GetById(int id)
         {
-            var livro = _context.Livros.FirstOrDefault(l => l.IdLivro == id);
-            return livro == null ? null : _mapper.Map<LivroDTO>(livro);
+            var livro = await _context.Livros.FirstOrDefaultAsync(l => l.IdLivro == id);
+            return  _mapper.Map<LivroDTO>(livro);
         }
 
-        public LivroDTO Create(CriarLivroDTO dto)
+        public async Task<LivroDTO> Create(CriarLivroDTO dto)
         {
             var livro = _mapper.Map<Livro>(dto);
-            _context.Livros.Add(livro);
-            _context.SaveChanges();
+
+           await _context.Livros.AddAsync(livro);
+           await  _context.SaveChangesAsync();
+
             return _mapper.Map<LivroDTO>(livro);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var livro = _context.Livros.FirstOrDefault(l => l.IdLivro == id);
+            var livro = await _context.Livros.FirstOrDefaultAsync(l => l.IdLivro == id);
             if (livro == null)
                 return false;
+
             _context.Livros.Remove(livro);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
             return true;
         }
-        public LivroDTO AtualizarParcial(int id, AtualizarLivroDTO dto)
+        public async Task<AtualizarLivroDTO> AtualizarParcial(int id, AtualizarLivroDTO dto)
         {
-            var livro = _context.Livros.FirstOrDefault(l => l.IdLivro == id);
+            var livro = await _context.Livros.FirstOrDefaultAsync(l => l.IdLivro == id);
+
             if (livro == null)
                 return null;
+
             _mapper.Map(dto, livro); // aplica valores do DTO sobre a entidade existente
-            _context.SaveChanges();
-            return _mapper.Map<LivroDTO>(livro);
+           await _context.SaveChangesAsync();
+            return _mapper.Map<AtualizarLivroDTO>(livro);
+        }
+
+        public List<Livro> GetLivrosDisponiveis()
+        {
+            return _context.Livros
+                .Where(l => l.disponivel == "S")
+                .ToList();
+        }
+        public List<Livro> GetLivrosPorAutor(int id_autor)
+        {
+            return _context.Livros
+                .Where(l => l.Id_autor == id_autor)    // NÃO ESTA FUNCIONANDO
+                .ToList();
         }
     }
 }

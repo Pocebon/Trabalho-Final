@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Trab_Final.Services.DTOs;
 
 namespace Trab_Final.BaseDados.Models;
 
@@ -74,8 +75,19 @@ public partial class ApiJulianoContext : DbContext
             entity.Property(e => e.DataDevolucao).HasColumnName("data_devolucao");
             entity.Property(e => e.DataEmprestimo).HasColumnName("data_emprestimo");
             entity.Property(e => e.IdPessoa).HasColumnName("id_pessoa");
+            entity.Property(e => e.IdLivro).HasColumnName("id_livro");
 
-            entity.HasOne(d => d.IdPessoaNavigation).WithMany(p => p.Emprestimos)
+
+            entity.Property(e => e.EmprestimoDevolvido)
+               .HasMaxLength(1)
+               .HasColumnName("emprestimodevolvido");
+
+            entity.HasOne(d => d.IdLivroNavigation).WithMany(p => p.Emprestimo)
+               .HasForeignKey(d => d.IdLivro)
+               .HasConstraintName("emprestimo_id_livro_fkey");
+
+
+            entity.HasOne(d => d.IdPessoaNavigation).WithMany(p => p.Emprestimo)
                 .HasForeignKey(d => d.IdPessoa)
                 .HasConstraintName("emprestimo_id_pessoa_fkey");
         });
@@ -108,6 +120,12 @@ public partial class ApiJulianoContext : DbContext
             entity.Property(e => e.IdLivro).HasColumnName("id_livro");
             entity.Property(e => e.AnoPublicacao).HasColumnName("ano_publicacao");
             entity.Property(e => e.IdEditora).HasColumnName("id_editora");
+            entity.Property(e => e.Id_autor).HasColumnName("id_autor");
+            entity.Property(e => e.Estante).HasColumnName("estante");
+            entity.Property(e => e.Prateleira)
+                .HasMaxLength(10)
+                .HasColumnName("prateleira");
+
             entity.Property(e => e.NomeLivro)
                 .HasMaxLength(100)
                 .HasColumnName("nome_livro");
@@ -115,6 +133,10 @@ public partial class ApiJulianoContext : DbContext
             entity.HasOne(d => d.IdEditoraNavigation).WithMany(p => p.Livros)
                 .HasForeignKey(d => d.IdEditora)
                 .HasConstraintName("livro_id_editora_fkey");
+
+            entity.HasOne(d => d.IdAutorNavigation).WithMany(p => p.Livros)
+    .HasForeignKey(d => d.Id_autor)
+    .HasConstraintName("livro_id_autor_fkey");
         });
 
         modelBuilder.Entity<Pessoa>(entity =>

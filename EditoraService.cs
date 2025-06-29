@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Trab_Final.BaseDados.Models;
 using Trab_Final.Services.DTOs;
 
@@ -17,46 +19,50 @@ namespace Trab_Final
             _mapper = mapper;
         }
 
-        public List<EditoraDTO> GetAll()
+        public async Task<List<EditoraDTO>> GetAll()
         {
             var editoras = _context.Editoras.ToList();
             return _mapper.Map<List<EditoraDTO>>(editoras);
         }
 
-        public EditoraDTO Create(CriarEditoraDTO dto)
+        public async Task<EditoraDTO> Create(CriarEditoraDTO dto)
         {
             var editora = _mapper.Map<Editora>(dto);
 
-            _context.Editoras.Add(editora);
-            _context.SaveChanges();
+           await  _context.Editoras.AddAsync(editora);
+           await  _context.SaveChangesAsync();
             return _mapper.Map<EditoraDTO>(editora);
         }
 
-        public EditoraDTO GetById(int id)
+        public async Task<EditoraDTO?> GetById(int id)
         {
-            var editora = _context.Editoras.FirstOrDefault(e => e.IdEditora == id);
+            var editora = await _context.Editoras.FirstOrDefaultAsync(e => e.IdEditora == id);
             if (editora == null)
                 return null;
 
-            return editora == null ? null : _mapper.Map<EditoraDTO>(editora);
+            return _mapper.Map<EditoraDTO>(editora);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            var editora = _context.Editoras.FirstOrDefault(e => e.IdEditora == id);
+            var editora = await _context.Editoras.FirstOrDefaultAsync(e => e.IdEditora == id);
+
             if (editora == null)
                 return false;
+
             _context.Editoras.Remove(editora);
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
             return true;
         }
-        public EditoraDTO AtualizarParcial(int id, AtualizarEditoraDTO dto)
+        public async Task<EditoraDTO?> AtualizarParcial(int id, AtualizarEditoraDTO dto)
         {
-            var editora = _context.Editoras.FirstOrDefault(e => e.IdEditora == id);
+            var editora = await _context.Editoras.FirstOrDefaultAsync(e => e.IdEditora == id);
+
             if (editora == null)
                 return null;
+
             _mapper.Map(dto, editora); // aplica valores do DTO sobre a entidade existente
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return _mapper.Map<EditoraDTO>(editora);
         }
     }

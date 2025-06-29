@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,20 +24,20 @@ namespace Trab_Final.Controllers
                 _mapper = mapper;
             }
             [HttpGet]
-            public ActionResult<List<EditoraDTO>> GetAll()
+            public async Task<IActionResult> GetAll()
             {
-                var lista = _editoraService.GetAll();
+                var lista = await _editoraService.GetAll();
                 return Ok(lista);
             }
 
             [HttpPost]
             [ProducesResponseType(typeof(EditoraDTO), StatusCodes.Status201Created)]
-            public ActionResult<EditoraDTO> Create([FromBody] CriarEditoraDTO dto)
-            {
+        public async Task<ActionResult<EditoraDTO>> Create([FromBody] CriarEditoraDTO dto)
+        {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var editoraCriada = _editoraService.Create(dto);
+                var editoraCriada = await _editoraService.Create(dto);
 
                 return CreatedAtAction(nameof(GetById), new { id = editoraCriada.IdEditora }, editoraCriada);
             }
@@ -45,9 +46,9 @@ namespace Trab_Final.Controllers
             [HttpGet("{id}")]
             [ProducesResponseType(typeof(EditoraDTO), StatusCodes.Status200OK)]
             [ProducesResponseType(StatusCodes.Status404NotFound)]
-            public ActionResult<EditoraDTO> GetById(int id)
-            {
-                var editora = _editoraService.GetById(id);
+        public async Task<ActionResult<EditoraDTO>> GetById(int id)
+        {
+                var editora = await _editoraService.GetById(id);
 
                 if (editora == null)
                     return NotFound();
@@ -58,9 +59,9 @@ namespace Trab_Final.Controllers
             [HttpDelete("{id}")]
             [ProducesResponseType(StatusCodes.Status204NoContent)]
             [ProducesResponseType(StatusCodes.Status404NotFound)]
-            public ActionResult Delete(int id)
-            {
-                var deleted = _editoraService.Delete(id);
+        public async Task<IActionResult> Delete(int id)
+        {
+                var deleted = await _editoraService.Delete(id);
 
                 if (!deleted)
                    return NotFound();
@@ -71,9 +72,9 @@ namespace Trab_Final.Controllers
             [HttpPatch("{id}")]
             [ProducesResponseType(typeof(EditoraDTO), StatusCodes.Status200OK)]
             [ProducesResponseType(StatusCodes.Status404NotFound)]
-            public ActionResult<EditoraDTO> AtualizarParcial(int id, [FromBody] AtualizarEditoraDTO dto)
-            {              
-                var editoraAtualizada = _editoraService.AtualizarParcial(id, dto);
+        public async Task<ActionResult<EditoraDTO>> AtualizarParcial(int id, [FromBody] AtualizarEditoraDTO dto)
+        {              
+                var editoraAtualizada = await _editoraService.AtualizarParcial(id, dto);
 
                 if (editoraAtualizada == null)
                     return NotFound();

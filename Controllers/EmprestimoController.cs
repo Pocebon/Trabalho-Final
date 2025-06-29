@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -26,18 +27,18 @@ namespace Trab_Final.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<EmprestimoDTO>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var lista = _emprestimoService.GetAll();
+            var lista = await _emprestimoService.GetAllAsync();
             return Ok(lista);
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(EmprestimoDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<EmprestimoDTO> GetById(int id)
+        public async Task<ActionResult<EditoraDTO>> GetById(int id)
         {
-            var emprestimo = _emprestimoService.GetById(id);
+            var emprestimo = await _emprestimoService.GetById(id);
 
             if (emprestimo == null)
                 return NotFound();
@@ -47,12 +48,15 @@ namespace Trab_Final.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(EmprestimoDTO), StatusCodes.Status201Created)]
-        public ActionResult<EmprestimoDTO> Create([FromBody] CriarEmprestimoDTO dto)
+        public async Task<ActionResult<EmprestimoDTO>> Create([FromBody] CriarEmprestimoDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var emprestimoCriado = _emprestimoService.Create(dto);
+            if (dto.EmprestimoDevolvido != null && dto.EmprestimoDevolvido != "S" && dto.EmprestimoDevolvido != "N")
+                return BadRequest("'EmprestimoDevolvido' deve ser 'S' ou 'N'.");
+
+            var emprestimoCriado = await _emprestimoService.Create(dto);
 
             return CreatedAtAction(nameof(GetById), new { id = emprestimoCriado.IdEmprestimo }, emprestimoCriado);
         }
@@ -61,9 +65,9 @@ namespace Trab_Final.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var deleted = _emprestimoService.Delete(id);
+            var deleted = await _emprestimoService.Delete(id);
             if (!deleted)
                 return NotFound();
 
@@ -74,16 +78,33 @@ namespace Trab_Final.Controllers
         [HttpPatch("{id}")]
         [ProducesResponseType(typeof(EmprestimoDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<EmprestimoDTO> AtualizarParcial(int id, [FromBody] AtualizarEmprestimoDTO dto)
+        public async Task<ActionResult<EmprestimoDTO>> AtualizarParcial(int id, [FromBody] AtualizarEmprestimoDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var emprestimoAtualizado = _emprestimoService.AtualizarParcial(id, dto);
+            if (dto.EmprestimoDevolvido != null && dto.EmprestimoDevolvido != "S" && dto.EmprestimoDevolvido != "N")
+                return BadRequest("'EmprestimoDevolvido' deve ser 'S' ou 'N'.");
+
+            var emprestimoAtualizado = await _emprestimoService.AtualizarParcial(id, dto);
+
             if (emprestimoAtualizado == null)
                 return NotFound();
 
             return Ok(emprestimoAtualizado);
+        }
+
+        [HttpPut("status")]
+        public IActionResult AtualizarStatus([FromBody] EmprestimoStatusDTO dto)
+        {
+            if (dto.EmprestimoDevolvido != "S")
+                return BadRequest("Só é permitido alterar o status para 'S'.");
+
+            var sucesso = _emprestimoService.AtualizarStatus(dto);
+            if (!sucesso)
+                return NotFound("Empréstimo não encontrado ou já está com status 'S'.");
+
+            return Ok("Status atualizado para 'S'.");
         }
     }
 }
